@@ -1,0 +1,99 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeScript Tutorial</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <h1>Finance Logger</h1>
+
+    <!-- output list -->
+    <ul class="item-list">
+      
+    </ul>
+  </div>
+
+  <footer>
+    <form class="new-item-form">
+      <div class="field">
+        <label>Type:</label>
+        <select id="type">
+          <option value="invoice">Invoice</option>
+          <option value="payment">Payment</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>To / From:</label>
+        <input type="text" id="tofrom">
+      </div>   
+      <div class="field">
+        <label>Details:</label>
+        <input type="text" id="details">
+      </div>
+      <div class="field">
+        <label>Amount (£):</label>
+        <input type="number" id="amount">
+      </div>
+      <button>Add</button>
+    </form>
+  </footer>
+
+  <!-- <script type="module" src='app.js'></script> -->
+  <script>
+
+    function addTimeToDeparture(departureDate, departureTime, timeToAdd) {
+        // Parse the departure time string into hours, minutes, and meridian (AM/PM)
+        const [departureHour, departureMinute, meridian] = departureTime.split(/:| /);
+
+        // Convert the departure time to 24-hour format for easier calculations
+        let hours = parseInt(departureHour, 10);
+        const minutes = parseInt(departureMinute, 10);
+        if (meridian === "PM" && hours !== 12) {
+          hours += 12;
+        }
+
+        // Parse the time to add string to extract days, hours, and minutes
+        const [, daysStr, hoursStr, minutesStr] = timeToAdd.match(/(\d+)\s+days?\s+(\d+)\s+hours?\s+(\d+)\s+minutes?/i).map(Number);
+        // const [daysStr, hoursStr, minutesStr] = timeToAdd.split(" ");
+        console.log(daysStr, hoursStr, minutesStr);
+        // const days = parseInt(daysStr.replace("days", ""), 10);
+        // const addedHours = parseInt(hoursStr.replace("hours", ""), 10);
+        // const addedMinutes = parseInt(minutesStr.replace("minutes", ""), 10);
+
+        const totalTimeToAdd = daysStr * 1440 + hoursStr * 60 + minutesStr;
+
+        // Calculate total time in minutes to add to the departure time
+        // const totalTimeToAdd = days * 24 * 60 + addedHours * 60 + addedMinutes;
+
+        // Calculate the arrival time in minutes since midnight
+        let totalMinutes = hours * 60 + minutes + totalTimeToAdd;
+
+        // Calculate the arrival date and time
+        const arrivalDateObj = new Date(departureDate);
+        // arrivalDateObj.setMinutes(arrivalDateObj.getMinutes() + totalMinutes);
+        console.log(arrivalDateObj)
+        // Format the arrival date and time
+        const formattedArrivalDate = arrivalDateObj.toLocaleDateString("en-US");
+        const formattedArrivalTime = arrivalDateObj.toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        });
+
+        return { formattedArrivalDate, formattedArrivalTime };
+      }
+
+      // Example usage:
+      const departureDate = "7-30-2023";
+      const departureTime = "7:30 PM";
+      const approximateTimeToArrive = "0 days 9 hours 00 minutes";
+      const { formattedArrivalDate, formattedArrivalTime } = addTimeToDeparture(departureDate, departureTime, approximateTimeToArrive);
+
+      console.log("Arrival Date:", formattedArrivalDate);
+      console.log("Arrival Time:", formattedArrivalTime);
+  </script>
+</body>
+</html>
